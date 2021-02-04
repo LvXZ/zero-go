@@ -1,0 +1,8 @@
+database:
+  datasource : mysql
+  url : (81.68.89.3:3306)/robot?charset=utf8mb4&parseTime=True&loc=Local
+  username : root
+  password : Qwer1234@
+
+application:
+  port: 8000
