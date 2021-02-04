@@ -2,13 +2,14 @@ package main
 
 // @Author: lvxiaozheng
 // @Date: 2021/2/4 10:52
-// @Description:
+// @Description: 在Go的路上无法自拔
 
 import (
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +21,7 @@ func main() {
 	// 2.绑定路由规则，执行的函数
 	// gin.Context，封装了request和response
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "hello World!")
+		c.String(http.StatusOK, "hello "+time.Now().Format("2006-01-01 15:04:05"))
 	})
 
 	r.GET("/hello", func(c *gin.Context) {
@@ -115,6 +116,33 @@ func main() {
 
 	r.GET("/info", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "info.html", gin.H{"title": "我是测试", "address": "www.bilibili.com"})
+	})
+
+	//重定向
+	r.GET("/redirect/index", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "http://www.bilibili.com")
+	})
+
+	// 1.异步
+	r.GET("/long_async", func(c *gin.Context) {
+		// 需要搞一个副本
+		copyContext := c.Copy()
+		var content string
+		content = "123456"
+
+		// 异步处理
+		go func() {
+			time.Sleep(3 * time.Second)
+			log.Println("异步执行：" + copyContext.Request.URL.Path)
+		}()
+		c.HTML(http.StatusOK, "index.html", gin.H{"title": "我是测试", "content": content})
+	})
+
+	// 2.同步
+	r.GET("/long_sync", func(c *gin.Context) {
+		time.Sleep(3 * time.Second)
+		log.Println("同步执行：" + c.Request.URL.Path)
+		c.HTML(http.StatusOK, "index.html", gin.H{"title": "我是测试", "content": time.Now().Format("2006-01-01 15:04:05")})
 	})
 
 	// 3.监听端口，默认在8080
