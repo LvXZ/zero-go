@@ -107,6 +107,16 @@ func main() {
 		c.String(http.StatusOK, fmt.Sprintf("upload ok %d files", len(files)))
 	})
 
+	//HTML返回渲染
+	r.LoadHTMLGlob("template/**/*")
+	r.GET("/index", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.html", gin.H{"title": "我是测试", "content": "123456"})
+	})
+
+	r.GET("/info", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "info.html", gin.H{"title": "我是测试", "address": "www.bilibili.com"})
+	})
+
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
 	r.Run(":8000")
