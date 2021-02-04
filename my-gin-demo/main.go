@@ -42,6 +42,15 @@ func main() {
 		c.String(http.StatusOK, fmt.Sprintf("hello %s", name))
 	})
 
+	//表单参数
+	r.POST("/form", func(c *gin.Context) {
+		types := c.DefaultPostForm("type", "post")
+		username := c.PostForm("username")
+		password := c.PostForm("password")
+		// c.String(http.StatusOK, fmt.Sprintf("username:%s,password:%s,type:%s", username, password, types))
+		c.String(http.StatusOK, fmt.Sprintf("username:%s,password:%s,type:%s", username, password, types))
+	})
+
 
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
