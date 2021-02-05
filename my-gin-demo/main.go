@@ -12,7 +12,29 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/sessions"
 )
+
+// 初始化一个cookie存储对象
+// something-very-secret应该是一个你自己的密匙，只要不被别人知道就行
+var store = sessions.NewCookieStore([]byte("something-very-secret"))
+
+func AuthMiddleWare() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// 获取客户端cookie并校验
+		if cookie, err := c.Cookie("abc"); err == nil {
+			if cookie == "123" {
+				c.Next()
+				return
+			}
+		}
+		// 返回错误
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "err"})
+		// 若验证不通过，不再调用后续的函数处理
+		c.Abort()
+		return
+	}
+}
 
 func main() {
 	// 1.创建路由
@@ -145,7 +167,73 @@ func main() {
 		c.HTML(http.StatusOK, "index.html", gin.H{"title": "我是测试", "content": time.Now().Format("2006-01-01 15:04:05")})
 	})
 
+	// 服务端要给客户端cookie
+	r.GET("/cookie", func(c *gin.Context) {
+		// 获取客户端是否携带cookie
+		cookie, err := c.Cookie("key_cookie")
+		if err != nil {
+			cookie = "NotSet"
+			// 给客户端设置cookie
+			//  maxAge int, 单位为秒
+			// path,cookie所在目录
+			// domain string,域名
+			//   secure 是否智能通过https访问
+			// httpOnly bool  是否允许别人通过js获取自己的cookie
+			c.SetCookie("key_cookie", "value_cookie", 60*5, "/",
+				"127.0.0.1", false, true)
+		}
+		fmt.Printf("cookie的值是： %s\n", cookie)
+	})
+
+	r.GET("/login", func(c *gin.Context) {
+		// 设置cookie
+		c.SetCookie("abc", "123", 60, "/",
+			"127.0.0.1", false, true)
+		// 返回信息
+		c.String(http.StatusOK, "Login success!")
+	})
+	r.GET("/home", AuthMiddleWare(), func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"data": "home"})
+	})
+
+	//session处理
+	http.HandleFunc("/save", SaveSession)
+	http.HandleFunc("/get", GetSession)
+	err := http.ListenAndServe(":8001", nil)
+	if err != nil {
+		fmt.Println("HTTP server failed,err:", err)
+		return
+	}
+
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
 	r.Run(":8000")
+}
+
+func SaveSession(w http.ResponseWriter, r *http.Request) {
+	// Get a session. We're ignoring the error resulted from decoding an
+	// existing session: Get() always returns a session, even if empty.
+
+	//　获取一个session对象，session-name是session的名字
+	session, err := store.Get(r, "session-name")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// 在session中存储值
+	session.Values["foo"] = "bar"
+	session.Values[42] = 43
+	// 保存更改
+	session.Save(r, w)
+}
+
+func GetSession(w http.ResponseWriter, r *http.Request) {
+	session, err := store.Get(r, "session-name")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	foo := session.Values["foo"]
+	fmt.Println(foo)
 }
