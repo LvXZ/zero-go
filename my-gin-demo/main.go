@@ -6,6 +6,8 @@ package main
 
 import (
 	"fmt"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"log"
 	"net/http"
 	"strings"
@@ -36,9 +38,25 @@ func AuthMiddleWare() gin.HandlerFunc {
 	}
 }
 
+// @title Swagger Example API
+// @version 1.0
+// @description This is a sample server celler server.
+// @termsOfService https://www.topgoer.com
+
+// @contact.name www.topgoer.com
+// @contact.url https://www.topgoer.com
+// @contact.email me@razeen.me
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host 127.0.0.1:8000
+// @BasePath /api/v1，
 func main() {
 	// 1.创建路由
 	r := gin.Default()
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// 2.绑定路由规则，执行的函数
 	// gin.Context，封装了request和response
@@ -46,8 +64,27 @@ func main() {
 		c.String(http.StatusOK, "hello "+time.Now().Format("2006-01-01 15:04:05"))
 	})
 
+	r.GET("/table", func(c *gin.Context) {
+		c.String(http.StatusOK, "hello "+time.Now().Format("2006-01-01 15:04:05"))
+	})
+
 	r.GET("/hello", func(c *gin.Context) {
-		c.String(http.StatusOK, "你好")
+
+		var mapSlice = make([]map[string]string, 3)
+		for index, value := range mapSlice {
+			fmt.Printf("index:%d value:%v\n", index, value)
+		}
+		fmt.Println("after init")
+		// 对切片中的map元素进行初始化
+		mapSlice[0] = make(map[string]string, 10)
+		mapSlice[0]["name"] = "王五"
+		mapSlice[0]["password"] = "123456"
+		mapSlice[0]["address"] = "红旗大街"
+		for index, value := range mapSlice {
+			fmt.Printf("index:%d value:%v\n", index, value)
+		}
+
+		c.JSON(http.StatusOK, mapSlice)
 	})
 
 	r.GET("/user/:name/*action", func(c *gin.Context) {
@@ -197,17 +234,17 @@ func main() {
 	})
 
 	//session处理
-	http.HandleFunc("/save", SaveSession)
+	/*http.HandleFunc("/save", SaveSession)
 	http.HandleFunc("/get", GetSession)
 	err := http.ListenAndServe(":8001", nil)
 	if err != nil {
 		fmt.Println("HTTP server failed,err:", err)
 		return
-	}
+	}*/
 
 	// 3.监听端口，默认在8080
 	// Run("里面不指定端口号默认为8080")
-	r.Run(":8000")
+	r.Run(":8088")
 }
 
 func SaveSession(w http.ResponseWriter, r *http.Request) {
