@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/robfig/cron"
-	"robots/internal/service"
+	"my-notify/internal/service"
 )
 
 // @Author: lvxiaozheng
@@ -13,7 +13,7 @@ func main() {
 
 	c := cron.New()
 
-	c.AddFunc("01 01 08 * * ?", func() {
+	c.AddFunc("0 0/5 * * * ?", func() {
 		s := new(service.Service)
 		s.Run()
 	})
