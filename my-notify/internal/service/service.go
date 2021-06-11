@@ -9,6 +9,7 @@ import (
 	"os"
 	"robots/internal/model"
 	"robots/internal/utils"
+	"strings"
 )
 
 // @Author: lvxiaozheng
@@ -34,12 +35,15 @@ func (s *Service) Run() {
 	//data, _ := json.Marshal(httpResponse)
 	//fmt.Println(string(data))
 
-	var content string
+	var content []string
 	for _, data := range httpResponse.Data {
-		content = content + data.V + "\n"
+		if data.V != "" {
+
+			content = append(content, strings.Replace(data.V, "自营店", "", -1))
+		}
 	}
 
-	sendText("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=9573b0db-7504-4119-ad84-84e15c2db651", content, nil)
+	sendText("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dcf9d9b5-eb3b-4d2a-86d8-d9a02e14c6da", strings.Join(content, " "), nil)
 }
 
 //获取信息
