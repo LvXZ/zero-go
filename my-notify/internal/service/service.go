@@ -27,23 +27,20 @@ func (s *Service) Run() {
 		return
 	}
 
+	var content []string
 	if len(httpResponse.Data) == 0 {
 		fmt.Println(httpResponse.Message)
-		return
-	}
-
-	//data, _ := json.Marshal(httpResponse)
-	//fmt.Println(string(data))
-
-	var content []string
-	for _, data := range httpResponse.Data {
-		if data.V != "" {
-
-			content = append(content, strings.Replace(data.V, "自营店", "", -1))
+		content = append(content, httpResponse.Message)
+	} else {
+		for _, data := range httpResponse.Data {
+			if data.V != "" {
+				content = append(content, strings.Replace(data.V, "自营店", "", -1))
+			}
 		}
 	}
 
 	sendText("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dcf9d9b5-eb3b-4d2a-86d8-d9a02e14c6da", strings.Join(content, " "), nil)
+	return
 }
 
 //获取信息
