@@ -39,7 +39,7 @@ func (s *Service) Run() {
 		}
 	}
 
-	sendText("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dcf9d9b5-eb3b-4d2a-86d8-d9a02e14c6da", strings.Join(content, " "), nil)
+	//sendText("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=dcf9d9b5-eb3b-4d2a-86d8-d9a02e14c6da", strings.Join(content, " "), nil)
 	return
 }
 
@@ -48,6 +48,7 @@ func getHttpInfo() (httpResponse *model.HttpResponse) {
 
 	//直接请求信息
 	content, err := utils.GetPostHttp()
+	fmt.Println(content)
 	if err != nil || content == "" {
 		return
 	}
