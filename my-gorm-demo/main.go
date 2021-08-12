@@ -2,7 +2,7 @@ package main
 
 // @Author: lvxiaozheng
 // @Date: 2021/2/1 16:48
-// @Description: 
+// @Description:
 
 import (
 	"fmt"
@@ -14,33 +14,31 @@ import (
 
 // User 用户信息
 type User struct {
-	Id int `gorm:"AUTO_INCREMENT"` // 设置 Num字段自增
-	Name string
+	Id     int `gorm:"AUTO_INCREMENT"` // 设置 Num字段自增
+	Name   string
 	Gender string
-	Hobby string
+	Hobby  string
 }
 
 // DBConfig 数据库yaml配置
 type Database struct {
-	Datasource 	string	`yaml:"datasource"`
-	Url 		string 	`yaml:"url"`
-	Username 	string	`yaml:"username"`
-	Password 	string	`yaml:"password"`
+	Datasource string `yaml:"datasource"`
+	Url        string `yaml:"url"`
+	Username   string `yaml:"username"`
+	Password   string `yaml:"password"`
 }
-
 
 type Application struct {
 	Port string
 }
 
-
 type Conf struct {
-	Database Database
+	Database    Database
 	Application Application
 }
 
 func GetConf() Conf {
-	yamlFile, err := ioutil.ReadFile("config.yaml")
+	yamlFile, err := ioutil.ReadFile("configs.yaml")
 	if err != nil {
 		fmt.Printf("yamlFile.Get err   #%v ", err)
 	}
@@ -61,7 +59,7 @@ func main() {
 	dbConfig = GetConf().Database
 
 	db, err := gorm.Open(dbConfig.Datasource, dbConfig.Username+":"+dbConfig.Password+"@"+dbConfig.Url)
-	if err!= nil{
+	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
@@ -70,7 +68,7 @@ func main() {
 	//db.AutoMigrate(&User{})
 	db.SingularTable(true)
 
-	u1 := User{ Name:"lvxz", Gender:"男", Hobby:"篮球"}
+	u1 := User{Name: "lvxz", Gender: "男", Hobby: "篮球"}
 	// 创建记录
 	db.Create(&u1)
 	// 查询
