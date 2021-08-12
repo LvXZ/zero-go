@@ -1,0 +1,10 @@
+[Client]
+    addr = "127.0.0.1:3306"
+    dsn ="root:lcy2020!@tcp(127.0.0.1:3306)/bilibili?charset=utf8mb4&parseTime=True&loc=Local"
+    readDSN = ["root:lcy2020!@tcp(127.0.0.1:3306)/bilibili?charset=utf8mb4&parseTime=True&loc=Local"]
+    active = 20
+    idle = 10
+    idleTimeout ="4h"
+    queryTimeout = "200ms"
+    execTimeout = "300ms"
+    tranTimeout = "400ms"
