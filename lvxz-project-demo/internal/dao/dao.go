@@ -19,6 +19,9 @@ type Dao interface {
 	Close()
 
 	Ping(ctx context.Context) (err error)
+
+	NotifyMessageDao
+	UserTokenDao
 }
 
 // Close close the resource.
