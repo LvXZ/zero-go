@@ -6,7 +6,7 @@ import (
 
 // @Author: lvxiaozheng
 // @Date: 2021/8/12 19:27
-// @Description: user_token数据表dao
+// @Description: user_token数据表CURD操作
 
 type UserTokenDao interface {
 	SelectByUserId(userId int64) (userToken *model.UserToken)

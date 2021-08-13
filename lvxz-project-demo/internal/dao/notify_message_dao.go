@@ -6,7 +6,7 @@ import (
 
 // @Author: lvxiaozheng
 // @Date: 2021/8/12 19:32
-// @Description: notify_message数据表dao
+// @Description: notify_message数据表CURD操作
 
 type NotifyMessageDao interface {
 	SelectById(userId int64) (notifyMessage *model.NotifyMessage)
