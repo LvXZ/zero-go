@@ -11,15 +11,3 @@ func (NotifyMessage) TableName() string {
 func (UserToken) TableName() string {
 	return "user_token"
 }
-
-//func AAAa(){
-//
-//	dd := mapper.Dao2{}
-//
-//
-//	dd.AA = func(userId int64) (userToken UserToken) {
-//		return UserToken{}
-//	}
-//
-//	dd.AA
-//}

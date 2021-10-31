@@ -44,3 +44,59 @@ func TestMyStudy2(t *testing.T) {
 		log.Println("Allow:", a)
 	}
 }
+
+type dog struct {
+	name string
+}
+
+type cat struct {
+	name string
+}
+
+type duck struct {
+	name string
+}
+
+// 定义接口
+type speaker interface {
+	speak() //只要实现了speak()方法的变量，都是speaker的类型
+}
+
+// dog叫
+func (d dog) speak() {
+	fmt.Printf("%s:汪\n", d.name)
+}
+
+// cat叫
+func (c cat) speak() {
+	fmt.Printf("%s:喵\n", c.name)
+}
+
+// duck叫
+func (d duck) speak() {
+	fmt.Printf("%s:嗄\n", d.name)
+}
+
+// 打
+func da(s speaker) {
+	//接受参数，打动物
+	s.speak()
+}
+
+// 结构体
+func TestMyStruct(t *testing.T) {
+
+	d := dog{
+		name: "小狗",
+	}
+	c := cat{
+		name: "小猫",
+	}
+	du := duck{
+		name: "小鸭",
+	}
+
+	da(d)
+	da(c)
+	da(du)
+}

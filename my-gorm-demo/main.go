@@ -38,7 +38,7 @@ type Conf struct {
 }
 
 func GetConf() Conf {
-	yamlFile, err := ioutil.ReadFile("configs.yaml")
+	yamlFile, err := ioutil.ReadFile("config.yaml")
 	if err != nil {
 		fmt.Printf("yamlFile.Get err   #%v ", err)
 	}
